@@ -8,20 +8,19 @@ module reg_desloc_tb;
   reg_desloc regd(.clk(clk), .reset(reset), .serial_in(serial_in), .parallel_in(parallel_in), 
   .out(out), .op(op)
   );
-
-  initial begin
-  clk = 0;
-    // Gerador de clock
+  
+  // Gerador de clock
+initial begin
+  clk = 0;  
   forever
   #5 clk = ~clk;
-  end
+end
 
-  initial begin
+initial begin
   serial_in = 1;
-    // Gerador de clock
   forever
-  #50 serial_in = ~serial_in;
-  end
+  #50 serial_in = ~serial_in;    //troca o bit de entrada
+end
 
 initial begin
   forever begin
@@ -40,23 +39,22 @@ initial
     end
 
  initial begin
-  integer i;
   reset = 0;
   parallel_in = 4'b1111;
   repeat (2) begin
-  op = 2'b00;
+  op = 2'b00;             // sem alterações
   #10;
-  op = 2'b01;
+  op = 2'b01;             // desloca para esquerda até ser 1111
   #45;
-  op = 2'b10;
+  op = 2'b10;             // desloca para direita até ser 0000
   #40;
-  op = 2'b11;
+  op = 2'b11;             // carrega 1111
   #5;
-  reset = 1;
+  reset = 1;              // "reseta" e repete o processo
   #10ps;
   reset = 0;
   end
-  parallel_in = 4'b1010;
+  parallel_in = 4'b1010;  // carrega 1010
   #10
 $finish();
   end
